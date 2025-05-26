@@ -1,10 +1,29 @@
-# Astarion 🎲
+# Astarion 🧛
 
-![Astarion Logo](docs/astarion-logo.png)
+<p align="center">
+  <img src="docs/astarion-logo.png" alt="Astarion Logo" width="200"/>
+</p>
 
-> Intelligent LLM-powered assistant for tabletop RPG character creation and rule validation
+<p align="center">
+  <strong>An intelligent LLM-powered assistant for RPG character creation and rule validation</strong>
+</p>
 
-Astarion revolutionizes tabletop RPG character creation by ensuring every decision is valid, optimized, and properly sourced. It bridges the gap between casual players who need guidance and veteran optimizers who demand accuracy.
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#roadmap">Roadmap</a> •
+  <a href="#contributing">Contributing</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.13+-blue.svg" alt="Python 3.13+"/>
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"/>
+  <img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status: Alpha"/>
+</p>
+
+---
 
 ## 🌟 Features
 
@@ -86,8 +105,39 @@ await processor.process_pdf("Players_Handbook.pdf", system="dnd5e")
 
 Astarion uses a multi-agent orchestrated architecture:
 
-```
-User Request → LangGraph Orchestrator → Specialized Agents → Knowledge Systems → Validated Response
+```mermaid
+graph TB
+    subgraph "User Interface"
+        UI[Web/CLI Interface]
+    end
+    
+    subgraph "Astarion Core"
+        O[LangGraph Orchestrator]
+        MCP[MCP Integration Layer]
+    end
+    
+    subgraph "Specialized Agents"
+        SA[Stats Agent]
+        EA[Equipment Agent]
+        LA[Lore Agent]
+        VA[Validation Agent]
+        OA[Optimization Agent]
+    end
+    
+    subgraph "Knowledge Systems"
+        RAG[RAG Pipeline]
+        PK[PyKnow Rule Engine]
+        VDB[(Vector Database)]
+        RE[Rule Repository]
+    end
+    
+    UI --> O
+    O --> MCP
+    MCP --> SA & EA & LA & VA & OA
+    SA & EA & LA & VA & OA --> RAG
+    SA & EA & LA & VA & OA --> PK
+    RAG --> VDB
+    PK --> RE
 ```
 
 ### Key Components
