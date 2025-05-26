@@ -1,202 +1,104 @@
-# Astarion 🧛‍♂️
+# Astarion 🎲
 
-<p align="center">
-  <img src="docs/astarion-logo.png" alt="Astarion Logo" width="200"/>
-</p>
+![Astarion Logo](docs/astarion-logo.png)
 
-<p align="center">
-  <strong>An intelligent LLM-powered assistant for RPG character creation and rule validation</strong>
-</p>
+> Intelligent LLM-powered assistant for tabletop RPG character creation and rule validation
 
-<p align="center">
-  <a href="#features">Features</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#roadmap">Roadmap</a> •
-  <a href="#contributing">Contributing</a>
-</p>
+Astarion revolutionizes tabletop RPG character creation by ensuring every decision is valid, optimized, and properly sourced. It bridges the gap between casual players who need guidance and veteran optimizers who demand accuracy.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/python-3.13+-blue.svg" alt="Python 3.13+"/>
-  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"/>
-  <img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status: Alpha"/>
-</p>
+## 🌟 Features
 
----
+- **🔍 Complete Rule Validation**: Every character choice validated against official rules
+- **📚 Source Citations**: Every validation includes book and page references
+- **⚡ Build Optimization**: MinMax strategies and synergy suggestions
+- **🤖 Intelligent PDF Processing**: Automatically extract rules from uploaded rulebooks
+- **🎯 Multi-System Support**: D&D 5e, Pathfinder, and more
+- **🔌 VTT Integration**: Export to Roll20, FoundryVTT, and other platforms
 
-## Overview
-
-Astarion is a sophisticated Python-based LLM agent designed to revolutionize tabletop RPG character creation through intelligent assistance, automated rule validation, and optimization suggestions. Built on cutting-edge technologies including **LangGraph** for agent orchestration, **Model Context Protocol (MCP)** for standardized data access, and advanced **RAG systems** for rulebook processing.
-
-### Key Features
-
-- 🎲 **Multi-System Support**: Initially supporting D&D 5e and Pathfinder, with extensible architecture for any RPG system
-- 📚 **Intelligent PDF Processing**: Upload rulebooks and automatically extract rules, spells, items, and mechanics
-- ✅ **Comprehensive Validation**: Every character decision validated against official rules with source citations
-- 🚀 **MinMax Optimization**: Get build suggestions optimized for your playstyle and goals
-- 🔍 **Source Attribution**: Every rule application includes precise rulebook references
-- 🤖 **Multi-Agent Architecture**: Specialized agents for stats, equipment, lore, and validation
-- 🔌 **Extensible Plugin System**: Add new game systems through simple PDF uploads
-
-## Architecture
-
-```mermaid
-graph TB
-    subgraph "User Interface"
-        UI[Web/CLI Interface]
-    end
-    
-    subgraph "Astarion Core"
-        O[LangGraph Orchestrator]
-        MCP[MCP Integration Layer]
-    end
-    
-    subgraph "Specialized Agents"
-        SA[Stats Agent]
-        EA[Equipment Agent]
-        LA[Lore Agent]
-        VA[Validation Agent]
-        OA[Optimization Agent]
-    end
-    
-    subgraph "Knowledge Systems"
-        RAG[RAG Pipeline]
-        PK[PyKnow Rule Engine]
-        VDB[(Vector Database)]
-        RE[Rule Repository]
-    end
-    
-    UI --> O
-    O --> MCP
-    MCP --> SA & EA & LA & VA & OA
-    SA & EA & LA & VA & OA --> RAG
-    SA & EA & LA & VA & OA --> PK
-    RAG --> VDB
-    PK --> RE
-```
-
-### Technology Stack
-
-- **Agent Framework**: [LangGraph](https://github.com/langchain-ai/langgraph) - Production-grade orchestration
-- **Protocol Layer**: [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) - Standardized LLM-data integration
-- **PDF Processing**: PyMuPDF + pdfplumber hybrid approach
-- **Vector Database**: Qdrant with BGE-M3 embeddings
-- **Rule Engine**: PyKnow for deterministic rule execution
-- **Validation**: python-constraint + OR-Tools for constraint satisfaction
-- **API Framework**: FastAPI with async support
-
-## Installation
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.13 or higher
-- Poetry 2
-- Docker (optional, for containerized deployment)
+- Python 3.13+
+- PostgreSQL 14+ (optional, for production)
+- Redis 6+ (optional, for caching)
+- Qdrant (for vector storage)
 
-### Quick Start
+### Installation
 
+1. Clone the repository:
 ```bash
-# Clone the repository
-git clone https://github.com/kerbaras/astarion.git
+git clone https://github.com/your-org/astarion.git
 cd astarion
-
-poetry install
-poetry run astarion
 ```
 
-### Docker Installation
+2. Install dependencies:
+```bash
+pip install -e ".[dev]"
+```
+
+3. Install PyKnow (rule engine):
+```bash
+pip install git+https://github.com/buguroo/pyknow.git
+```
+
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your API keys
+```
+
+5. Initialize the database:
+```bash
+alembic upgrade head
+```
+
+### Basic Usage
+
+#### CLI Interface
 
 ```bash
-# Build and run with Docker Compose
-docker-compose up -d
+# Validate a character file
+astarion validate character.json --system dnd5e
+
+# Create a character interactively
+astarion create-character --interactive
+
+# Add a rulebook to the system
+astarion add-rulebook "Players_Handbook.pdf" --system dnd5e
 ```
 
-## Usage
-
-### Basic Character Creation
+#### Python API
 
 ```python
-from astarion import AstarionClient
+from astarion import CharacterValidator, RulebookProcessor
 
-# Initialize client
-client = AstarionClient()
+# Validate a character
+validator = CharacterValidator(system="dnd5e")
+result = await validator.validate_character(character_data)
 
-# Create a D&D 5e character
-character = await client.create_character(
-    system="dnd5e",
-    name="Elara Moonwhisper",
-    race="Elf",
-    subrace="High Elf",
-    class_name="Wizard",
-    level=1,
-    optimization_goals=["spell_damage", "survivability"]
-)
-
-# View validation results with source citations
-print(character.validation_report)
+# Process a rulebook
+processor = RulebookProcessor()
+await processor.process_pdf("Players_Handbook.pdf", system="dnd5e")
 ```
 
-### Adding a New Rulebook
+## 🏗️ Architecture
 
-```python
-# Upload a new rulebook PDF
-rulebook = await client.add_rulebook(
-    file_path="path/to/players_handbook.pdf",
-    system="dnd5e",
-    book_name="Player's Handbook",
-    version="5th Edition"
-)
-
-# The system will automatically:
-# 1. Extract and chunk content
-# 2. Generate embeddings for RAG
-# 3. Extract rules for PyKnow engine
-# 4. Validate against existing rules
-```
-
-### MCP Server Example
-
-```python
-# Start an MCP server for D&D 5e rules
-from astarion.mcp import create_dnd5e_server
-
-server = create_dnd5e_server()
-
-# The server provides tools like:
-# - validate_multiclass_requirements
-# - calculate_spell_slots
-# - check_feat_prerequisites
-# - get_class_features
-```
-
-## Project Structure
+Astarion uses a multi-agent orchestrated architecture:
 
 ```
-astarion/
-├── agents/              # LangGraph agent implementations
-│   ├── stats.py
-│   ├── equipment.py
-│   ├── lore.py
-│   ├── validation.py
-│   └── optimization.py
-├── mcp/                 # Model Context Protocol servers
-│   ├── dnd5e/
-│   ├── pathfinder/
-│   └── base.py
-├── rag/                 # RAG pipeline components
-│   ├── extractors/
-│   ├── chunkers/
-│   └── embedders/
-├── rules/               # PyKnow rule definitions
-│   ├── dnd5e/
-│   ├── pathfinder/
-│   └── engine.py
-├── api/                 # FastAPI endpoints
-├── web/                 # Frontend (if applicable)
+User Request → LangGraph Orchestrator → Specialized Agents → Knowledge Systems → Validated Response
 ```
 
-## Development
+### Key Components
+
+- **LangGraph Orchestrator**: Manages workflow and agent coordination
+- **Specialized Agents**: Stats, Equipment, Lore, Validation, and Optimization agents
+- **MCP Servers**: Standardized rule access via Model Context Protocol
+- **RAG Pipeline**: Intelligent PDF processing and semantic search
+- **PyKnow Engine**: Deterministic rule execution with explanations
+
+## 🧪 Development
 
 ### Running Tests
 
@@ -205,70 +107,57 @@ astarion/
 pytest
 
 # Run with coverage
-pytest --cov=astarion
+pytest --cov=src --cov-report=html
 
-# Run specific test category
-pytest tests/agents/
-pytest tests/rules/
+# Run specific test file
+pytest tests/unit/test_validator.py
 ```
 
-### Adding a New Game System
-
-1. Create a new directory under `mcp/` for your system
-2. Implement the MCP server with system-specific tools
-3. Add rule templates under `rules/your_system/`
-4. Create extraction patterns in `rag/extractors/`
-5. Submit a pull request with tests
-
-### Code Style
-
-We use Black for code formatting and follow PEP 8 guidelines:
+### Code Quality
 
 ```bash
 # Format code
-black astarion/
+black src tests
 
-# Check linting
-flake8 astarion/
+# Lint code
+ruff check src tests
 
 # Type checking
-mypy astarion/
+mypy src
 ```
 
-## Roadmap
+### Starting Development Server
 
-### Phase 1: Core Implementation
-- [ ] LangGraph orchestrator architecture
-- [ ] Basic MCP server for D&D 5e
-- [ ] PDF processing pipeline
-- [ ] Initial validation engine
-- [ ] CLI interface
+```bash
+# Start the API server
+uvicorn src.api.main:app --reload
 
-### Phase 2: Advanced Features
-- [ ] Complete RAG system with Qdrant
-- [ ] PyKnow rule generation from PDFs
-- [ ] MinMax optimization algorithms
-- [ ] Pathfinder support
-- [ ] Web interface
+# Start the CLI in development mode
+python -m src.cli.main
+```
 
-### Phase 3: Production Ready
-- [ ] Plugin architecture
-- [ ] Community rulebook marketplace
-- [ ] VTT integrations (Roll20, FoundryVTT)
-- [ ] Performance optimizations
-- [ ] Cloud deployment options
+## 📦 Project Structure
 
-### Phase 4: Extended Features
-- [ ] AI-assisted homebrew rule creation
-- [ ] Campaign management tools
-- [ ] Multi-language support
-- [ ] Mobile companion app
+```
+astarion/
+├── src/
+│   ├── agents/          # LangGraph agents
+│   ├── core/           # Core models and orchestration
+│   ├── mcp/            # Model Context Protocol servers
+│   ├── rag/            # RAG pipeline and PDF processing
+│   ├── cli/            # CLI interface
+│   ├── validation/     # Validation engine
+│   └── utils/          # Utilities and helpers
+├── tests/              # Test suite
+├── docs/               # Documentation
+└── config/             # Configuration files
+```
 
-## Contributing
+## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-### How to Contribute
+### Development Workflow
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -276,34 +165,44 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## 📚 Documentation
+
+- [Project Overview](docs/PROJECT_OVERVIEW.md)
+- [Architectural Design](docs/ARCHITECTURAL_DESIGN.md)
+- [Domain Knowledge](docs/DOMAIN_KNOWLEDGE.md)
+- [Integration Patterns](docs/INTEGRATION_PATTERNS.md)
+- [Implementation Roadmap](docs/IMPLEMENTATION_ROADMAP.md)
+
+## 🛡️ Security
+
+- All PDF uploads are scanned and validated
+- API rate limiting prevents abuse
+- No character data stored without explicit consent
+- Respect for publisher copyrights
+
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- Named after the beloved vampire spawn from Baldur's Gate 3
-- Built on the shoulders of giants: LangChain, LangGraph, and the open-source community
-- Special thanks to the tabletop RPG community for inspiration and feedback
+- The tabletop RPG community for inspiration and feedback
+- LangChain and LangGraph teams for excellent frameworks
+- All contributors who help make Astarion better
 
-## Citation
+## 🚧 Status
 
-If you use Astarion in your research or projects, please cite:
+Astarion is currently in **Phase 1: Foundation** development. Core functionality is being implemented with a focus on D&D 5e support.
 
-```bibtex
-@software{astarion2025,
-  title = {Astarion: An LLM-Powered Assistant for Tabletop RPG Character Creation},
-  year = {2025},
-  url = {https://github.com/kerbaras/astarion}
-}
-```
+### Current Features
+- ✅ Basic character validation
+- ✅ CLI interface
+- 🚧 PDF rulebook processing
+- 🚧 LangGraph orchestration
+- 📅 Web interface (coming in Phase 3)
 
----
+## 💬 Support
 
-<p align="center">
-  Made with ❤️ for the Role Community
-</p>
-
-<p align="center">
-  <i>"I'm not a details person, darling. But when it comes to rules... well, let's just say I'm very particular."</i> - Astarion
-</p>
+- Discord: [Join our server](https://discord.gg/astarion)
+- Issues: [GitHub Issues](https://github.com/your-org/astarion/issues)
+- Discussions: [GitHub Discussions](https://github.com/your-org/astarion/discussions)

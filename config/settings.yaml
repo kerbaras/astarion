@@ -1,0 +1,59 @@
+# Astarion Configuration Settings
+
+# Application Settings
+app:
+  name: "Astarion"
+  version: "0.1.0"
+  debug: false
+  log_level: "INFO"
+
+# LLM Settings
+llm:
+  provider: "openai"
+  model: "gpt-4-turbo-preview"
+  temperature: 0.3
+  max_tokens: 2000
+  timeout: 30
+
+# Embedding Settings
+embedding:
+  model: "all-MiniLM-L6-v2"
+  dimension: 384
+  batch_size: 32
+
+# Qdrant Vector Database Settings
+qdrant:
+  url: "localhost:6333"
+  api_key: null
+  collection_prefix: "astarion_rules"
+  timeout: 30
+
+# RAG Pipeline Settings
+rag:
+  chunk_size: 1000
+  chunk_overlap: 200
+  search_limit: 10
+  score_threshold: 0.5
+  
+# Game System Settings
+game_systems:
+  default: "dnd5e"
+  supported:
+    - "dnd5e"
+    - "pathfinder"
+
+# Validation Settings
+validation:
+  strict_mode: true
+  cache_results: true
+  max_retries: 3
+
+# API Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+  rate_limit: 100
+  rate_limit_period: 60 

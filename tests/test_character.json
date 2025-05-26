@@ -1,0 +1,88 @@
+{
+  "name": "Thorin Ironforge",
+  "system": "dnd5e",
+  "level": 5,
+  "experience_points": 6500,
+  "race": {
+    "name": "Dwarf",
+    "subrace": "Mountain Dwarf",
+    "traits": ["Darkvision", "Dwarven Resilience", "Stonecunning"],
+    "ability_bonuses": {
+      "constitution": 2,
+      "strength": 2
+    },
+    "size": "Medium",
+    "speed": 25,
+    "languages": ["Common", "Dwarvish"]
+  },
+  "classes": [
+    {
+      "name": "Fighter",
+      "level": 5,
+      "subclass": "Champion",
+      "hit_dice": "d10",
+      "primary_ability": "strength",
+      "saving_throws": ["strength", "constitution"],
+      "skills": ["Athletics", "Intimidation"],
+      "features": ["Fighting Style", "Second Wind", "Action Surge", "Extra Attack"]
+    }
+  ],
+  "background": {
+    "name": "Soldier",
+    "skills": ["Athletics", "Intimidation"],
+    "languages": [],
+    "equipment": ["Insignia of rank", "Trophy", "Deck of cards", "Common clothes"],
+    "feature": "Military Rank"
+  },
+  "alignment": "Lawful Good",
+  "ability_scores": {
+    "strength": 16,
+    "dexterity": 13,
+    "constitution": 16,
+    "intelligence": 10,
+    "wisdom": 12,
+    "charisma": 8
+  },
+  "hit_points": 44,
+  "max_hit_points": 44,
+  "armor_class": 18,
+  "initiative_bonus": 1,
+  "proficiency_bonus": 3,
+  "skill_proficiencies": ["Athletics", "Intimidation", "Perception", "Survival"],
+  "tool_proficiencies": ["Smith's tools"],
+  "weapon_proficiencies": ["Simple weapons", "Martial weapons"],
+  "armor_proficiencies": ["Light armor", "Medium armor", "Heavy armor", "Shields"],
+  "languages": ["Common", "Dwarvish"],
+  "equipment": {
+    "weapons": ["Battleaxe", "Handaxe", "Handaxe"],
+    "armor": "Plate armor",
+    "shield": true,
+    "tools": ["Smith's tools"],
+    "other_items": ["Explorer's pack", "Insignia of rank"],
+    "currency": {
+      "cp": 0,
+      "sp": 0,
+      "ep": 0,
+      "gp": 15,
+      "pp": 0
+    }
+  },
+  "spellcasting_ability": null,
+  "spell_slots": {},
+  "spells_known": [],
+  "spells_prepared": [],
+  "features": [
+    "Darkvision",
+    "Dwarven Resilience", 
+    "Stonecunning",
+    "Fighting Style (Defense)",
+    "Second Wind",
+    "Action Surge",
+    "Extra Attack",
+    "Improved Critical"
+  ],
+  "feats": [],
+  "creation_method": "standard_array",
+  "optimization_goals": ["defense", "damage"],
+  "notes": "A sturdy dwarf fighter focused on tanking and melee combat."
+} 
